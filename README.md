@@ -1,0 +1,2 @@
+# TextEditor
+Smart Text editor.
