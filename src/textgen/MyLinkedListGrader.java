@@ -28,7 +28,7 @@ public class MyLinkedListGrader {
 	public String printListBackwards(MyLinkedList<Integer> lst) {
 		LLNode<Integer> curr;
 		String ret = "";
-		System.out.println(lst.tail);
+//		System.out.println(lst.tail);
 		if (lst.tail.data == null)
 			curr = lst.tail.prev;
 		else
@@ -43,6 +43,7 @@ public class MyLinkedListGrader {
 	
 	public void doTest()
 	{
+//		System.out.print("Doing test");
                 int incorrect = 0;
                 int tests = 0;
                 String feedback = "";
@@ -59,7 +60,7 @@ public class MyLinkedListGrader {
 //        System.out.print(lst);
 		for (int i : nums) {
 			lst.add(i);
-                }
+          }
                 feedback += "Got " + printListForwards(lst) + ". ";
 
                 feedback += "** Test #2: Getting from the middle...";
@@ -86,7 +87,7 @@ public class MyLinkedListGrader {
                 feedback += "Got " + lst.size() + ". ";
 
                 feedback += "** Test #9: Testing add, remove, and add on new list...";
-        
+//        System.out.print(lst);
 		lst = new MyLinkedList<Integer>();
 		lst.add(0, 1);
 		lst.remove(0);

@@ -69,8 +69,7 @@ public class MyLinkedListTester {
 		list2.add("A");
 		list2.add("C");
 		list2.add("D");
-		list2.add(1, "B");
-		list2.add(0, "S");
+
 //		list2.add(list2.size(), "E");
 		
 	
@@ -142,6 +141,16 @@ public class MyLinkedListTester {
 	public void testRemove()
 	{
 		int a = list1.remove(0);
+		try {
+			list1.remove(-1);
+			fail("Check remove at low");
+		}catch(IndexOutOfBoundsException e){		
+		}
+		try {
+			list1.remove(10);
+			fail("Check remove at low");
+		}catch(IndexOutOfBoundsException e){		
+		}
 		assertEquals("Remove: check a is correct ", 65, a);
 		assertEquals("Remove: check element 0 is correct ", (Integer)21, list1.get(0));
 		assertEquals("Remove: check size is correct ", 2, list1.size());
@@ -165,6 +174,13 @@ public class MyLinkedListTester {
 		}catch(IndexOutOfBoundsException e) {
 
 		}
+		try {
+			list1.add(null);
+			fail("Check adding null");
+			
+		}catch(NullPointerException e) {
+
+		}
 		
 		
 	}
@@ -174,7 +190,8 @@ public class MyLinkedListTester {
 	@Test
 	public void testSize()
 	{
-		assertEquals("List2 size checks:", 5, list2.size());
+//		System.out.print("Size:" + list2.size());
+		assertEquals("List2 size checks:", 3, list2.size());
 		assertEquals("List2 size checks:", 2, shortList.size());
 		assertEquals("List2 size checks:", 0, emptyList.size());
 		// TODO: implement this test
@@ -196,13 +213,23 @@ public class MyLinkedListTester {
 		} catch(IndexOutOfBoundsException e) {
 			
 		}
+		
+		try {
+			list2.add(2, null);
+			fail("Check adding null");
+			
+		}catch(NullPointerException e) {
+
+		}
 		try {
 			list2.add(10, "F");
 			fail("Check if adding at index -1 fails.");
 		} catch(IndexOutOfBoundsException e) {
 			
 		}
+		list2.add(1, "B");
 	 assertEquals("check added B", "B", list2.get(1));
+	 list2.add(0, "S");
 	 assertEquals("check added S", "S", list2.get(0));
 //	 System.out.print("List2 Size: "+list2.get(list2.size()));
 //	 assertEquals("check added E", "E", list2.get(list2.size()-1));
