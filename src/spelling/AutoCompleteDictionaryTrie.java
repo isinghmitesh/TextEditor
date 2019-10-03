@@ -2,6 +2,7 @@ package spelling;
 
 import java.util.List;
 import java.util.Set;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -20,6 +21,7 @@ public class AutoCompleteDictionaryTrie implements  Dictionary, AutoComplete {
     public AutoCompleteDictionaryTrie()
 	{
 		root = new TrieNode();
+		size=0;
 	}
 	
 	
@@ -39,7 +41,31 @@ public class AutoCompleteDictionaryTrie implements  Dictionary, AutoComplete {
 	 */
 	public boolean addWord(String word)
 	{
-	    //TODO: Implement this method.
+		
+		String LowerWord = word.toLowerCase();
+		if(isWord(LowerWord)) {
+			return false;
+		}
+		TrieNode tn = root;
+//		System.out.print(tn.getValidNextCharacters());
+		for(int i=0; i<LowerWord.length(); i++) {
+			if(!tn.getValidNextCharacters().contains(LowerWord.charAt(i))){
+				TrieNode next = tn.insert(LowerWord.charAt(i));
+				tn = next;
+				
+			}else {
+				tn = tn.getChild(LowerWord.charAt(i));
+			}
+			if(LowerWord.length()-1 == i) {
+				tn.setEndsWord(true);
+//				System.out.println(size);
+				size++;
+				return true;
+			}
+			
+		}
+//		printNode(root);
+		
 	    return false;
 	}
 	
@@ -49,8 +75,12 @@ public class AutoCompleteDictionaryTrie implements  Dictionary, AutoComplete {
 	 */
 	public int size()
 	{
-	    //TODO: Implement this method
-	    return 0;
+//		TrieNode tn = root;
+////		printNode(tn);
+//		while(!tn.getValidNextCharacters().isEmpty()) {
+//			tn = tn.getChild(c);
+//		}
+	    return size;
 	}
 	
 	
@@ -59,7 +89,22 @@ public class AutoCompleteDictionaryTrie implements  Dictionary, AutoComplete {
 	@Override
 	public boolean isWord(String s) 
 	{
-	    // TODO: Implement this method
+		
+		TrieNode tn = root;
+		String LowerWord = s.toLowerCase();
+		for(int i=0;i<LowerWord.length(); i++) {
+			if(tn.getValidNextCharacters().contains(LowerWord.charAt(i))) {
+				tn = tn.getChild(LowerWord.charAt(i));
+			}else {
+				return false;
+			}
+			
+			if(LowerWord.length()-1 == i) {
+				if(tn.endsWord()) {
+					return true;
+				}			
+			}
+		}
 		return false;
 	}
 
@@ -86,22 +131,53 @@ public class AutoCompleteDictionaryTrie implements  Dictionary, AutoComplete {
      */@Override
      public List<String> predictCompletions(String prefix, int numCompletions) 
      {
+    	 int completionsCount = 0 ;
     	 // TODO: Implement this method
     	 // This method should implement the following algorithm:
     	 // 1. Find the stem in the trie.  If the stem does not appear in the trie, return an
     	 //    empty list
+    	 TrieNode tn = root;
+    	 List<String> list = new LinkedList<String>();
+    	 String lowerWord = prefix.toLowerCase();
+    	 for(int i=0; i<lowerWord.length(); i++) {
+    		 Character currChar = lowerWord.charAt(i);
+    		 if(tn.getValidNextCharacters().contains(currChar)) {
+    			 tn = tn.getChild(currChar);
+    		 }else {
+    			 return list;
+    		 }	 
+    	 }
+    	 if(tn.endsWord()) {
+    		 completionsCount++;
+    		 list.add(tn.getText());
+    	 }
     	 // 2. Once the stem is found, perform a breadth first search to generate completions
     	 //    using the following algorithm:
     	 //    Create a queue (LinkedList) and add the node that completes the stem to the back
     	 //       of the list.
+    	 LinkedList<TrieNode> nodesToSearchStem = new LinkedList<TrieNode>();    	 
+    	 for(Character c: tn.getValidNextCharacters()) {
+    		 nodesToSearchStem.add(tn.getChild(c));
+    	 }
+    	 
     	 //    Create a list of completions to return (initially empty)
     	 //    While the queue is not empty and you don't have enough completions:
     	 //       remove the first Node from the queue
     	 //       If it is a word, add it to the completions list
     	 //       Add all of its child nodes to the back of the queue
     	 // Return the list of completions
+    	 while(nodesToSearchStem!=null  && nodesToSearchStem.size()>0 && completionsCount < numCompletions) {
+    		 TrieNode trieNode = nodesToSearchStem.remove(0);
+    		 if(trieNode.endsWord()) {
+    			 completionsCount++;
+    			 list.add(trieNode.getText());
+    		 }
+    		 for(Character c: trieNode.getValidNextCharacters()) {
+    			 nodesToSearchStem.add(trieNode.getChild(c));
+    		 }
+    	 }
     	 
-         return null;
+         return list;
      }
 
  	// For debugging
