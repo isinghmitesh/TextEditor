@@ -11,7 +11,7 @@ public class DictionaryBST implements Dictionary
    private TreeSet<String> dict;
 	
     // TODO: Implement the dictionary interface using a TreeSet.  
- 	DictionaryBST(){
+ 	public DictionaryBST(){
 	   dict = new TreeSet<String>();
    }
 	
